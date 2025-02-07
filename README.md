@@ -106,6 +106,10 @@ SWE Bench is a challenging software engineering benchmark where aider
 solved *real* GitHub issues from popular open source
 projects like django, scikitlearn, matplotlib, etc.
 
+## Contributors
+
+- Mateusz Tylec - [mateusz@mateusztylec.com](mailto:mateusz@mateusztylec.com)
+
 ## More info
 
 - [Documentation](https://aider.chat/)
