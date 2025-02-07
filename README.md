@@ -108,7 +108,7 @@ projects like django, scikitlearn, matplotlib, etc.
 
 ## Contributors
 
-- Mateusz Tylec - [mateusz@mateusztylec.com](mailto:mateusz@mateusztylec.com)
+- Mateusz Tylec
 
 ## More info
 
