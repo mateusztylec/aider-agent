@@ -256,3 +256,6 @@ zipp==3.21.0
 # The following packages are considered to be unsafe in a requirements file:
 pip==25.0
     # via -r requirements/requirements.in
+
+fastapi
+uvicorn
