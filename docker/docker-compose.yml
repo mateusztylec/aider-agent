@@ -13,8 +13,8 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - OPENAI_API_KEY=
-      - PERPLEXITY_API_KEY=
-      - REPO_URL=
-      - GITHUB_TOKEN=
+      - OPENAI_API_KEY=a
+      - PERPLEXITY_API_KEY=d
+      - REPO_URL=b
+      - GITHUB_TOKEN=c
 
