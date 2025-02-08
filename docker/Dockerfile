@@ -2,7 +2,7 @@ FROM python:3.10-slim AS base
 
 # Install system dependencies
 RUN apt-get update && \
-    apt-get install --no-install-recommends -y build-essential git libportaudio2 pandoc && \
+    apt-get install --no-install-recommends -y build-essential git curl libportaudio2 pandoc && \
     rm -rf /var/lib/apt/lists/*
 
 # Create app user with UID 1000
