@@ -1,18 +1,41 @@
+# macOS
 .DS_Store
+
+# Python
+*.py[cod]
+*.pyo
+__pycache__/
+*.so
+
+# Virtual Environments
+.venv/
+env/
+venv/
+ENV/
+
+# VSCode
 .vscode/
-aider.code-workspace
-*.pyc
+*.code-workspace
+
+# Aider specific
 .aider*
 aider_chat.egg-info/
-build
+aider/__version__.py
+aider/_version.py
+
+# Build artifacts
+build/
 dist/
+tmp.benchmarks/
+
+# Ruby
 Gemfile.lock
+
+# Jekyll
 _site
 .jekyll-cache/
 .jekyll-metadata
-aider/__version__.py
-aider/_version.py
-.venv/
+
+# Temporary files
 .#*
-.gitattributes
-tmp.benchmarks/
+gitattributes
