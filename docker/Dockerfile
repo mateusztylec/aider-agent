@@ -32,40 +32,16 @@ RUN git config --system --add safe.directory /app
 ENV HOME=/app
 
 #########################
-FROM base AS aider-full
-
-ENV AIDER_DOCKER_IMAGE=paulgauthier/aider-full
-
-COPY . /tmp/aider
-
-# Install dependencies as root
-RUN /venv/bin/python -m pip install --upgrade --no-cache-dir pip && \
-    /venv/bin/python -m pip install --no-cache-dir /tmp/aider[help,browser,playwright] boto3 \
-       --extra-index-url https://download.pytorch.org/whl/cpu && \
-    rm -rf /tmp/aider
-
-# Install playwright browsers
-RUN /venv/bin/python -m playwright install --with-deps chromium
-
-# Fix site-packages permissions
-RUN find /venv/lib/python3.10/site-packages \( -type d -exec chmod a+rwx {} + \) -o \( -type f -exec chmod a+rw {} + \)
-
-# Switch to appuser
-USER appuser
-
-ENTRYPOINT ["/venv/bin/aider"]
-
-#########################
 FROM base AS aider
 
-ENV AIDER_DOCKER_IMAGE=paulgauthier/aider
+ENV AIDER_DOCKER_IMAGE=mateusztylec/aider-agent
 
 COPY . /tmp/aider
 
 # Install dependencies as root
 RUN /venv/bin/python -m pip install --upgrade --no-cache-dir pip && \
     /venv/bin/python -m pip install --no-cache-dir /tmp/aider[playwright] boto3 \
-       --extra-index-url https://download.pytorch.org/whl/cpu && \
+    --extra-index-url https://download.pytorch.org/whl/cpu && \
     rm -rf /tmp/aider
 
 # Install playwright browsers
@@ -77,4 +53,5 @@ RUN find /venv/lib/python3.10/site-packages \( -type d -exec chmod a+rwx {} + \)
 # Switch to appuser
 USER appuser
 
-ENTRYPOINT ["/venv/bin/aider"]
+# ENTRYPOINT ["/venv/bin/aider"]
+ENTRYPOINT ["python", "-m", "aider.server"]

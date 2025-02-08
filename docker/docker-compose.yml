@@ -1,0 +1,10 @@
+version: '3.8'
+
+services:
+  aider-agent:
+    image: mateusztylec/aider-agent
+    ports:
+      - "8000:8000"
+    environment:
+      - OPENAI_API_KEY=sk-proj-1234567890
+
