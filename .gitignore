@@ -39,3 +39,5 @@ _site
 # Temporary files
 .#*
 gitattributes
+temp/
+.env

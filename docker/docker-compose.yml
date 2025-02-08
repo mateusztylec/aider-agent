@@ -1,10 +1,20 @@
 version: '3.8'
 
 services:
+  aider-agent-build:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+      target: aider
+    image: mateusztylec/aider-agent
+
   aider-agent:
     image: mateusztylec/aider-agent
     ports:
       - "8000:8000"
     environment:
-      - OPENAI_API_KEY=sk-proj-1234567890
+      - OPENAI_API_KEY=
+      - PERPLEXITY_API_KEY=
+      - REPO_URL=
+      - GITHUB_TOKEN=
 

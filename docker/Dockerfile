@@ -53,5 +53,8 @@ RUN find /venv/lib/python3.10/site-packages \( -type d -exec chmod a+rwx {} + \)
 # Switch to appuser
 USER appuser
 
+#set aider config
+COPY ./docker/.aider.conf.yml /home/appuser/.aider.conf.yml 
+
 # ENTRYPOINT ["/venv/bin/aider"]
 ENTRYPOINT ["python", "-m", "aider.server"]
