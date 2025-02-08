@@ -9,8 +9,6 @@ RUN apt-get update && \
 RUN useradd -m -u 1000 -s /bin/bash appuser
 
 WORKDIR /app
-#set aider config
-COPY ./docker/.aider.conf.yml /home/appuser/.aider.conf.yml 
 
 # Create virtual environment
 RUN python -m venv /venv
@@ -55,6 +53,8 @@ RUN find /venv/lib/python3.10/site-packages \( -type d -exec chmod a+rwx {} + \)
 # Switch to appuser
 USER appuser
 
+#set aider config
+COPY ./docker/.aider.conf.yml /home/appuser/.aider.conf.yml 
 
 # ENTRYPOINT ["/venv/bin/aider"]
 ENTRYPOINT ["python", "-m", "aider.server"]

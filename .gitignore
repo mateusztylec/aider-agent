@@ -19,6 +19,7 @@ ENV/
 
 # Aider specific
 .aider*
+!docker/.aider.conf.yml
 aider_chat.egg-info/
 aider/__version__.py
 aider/_version.py
