@@ -4,7 +4,7 @@ services:
   aider-agent-build:
     build:
       context: ..
-      dockerfile: docker/Dockerfile
+      dockerfile: Dockerfile
       target: aider
     image: mateusztylec/aider-agent
 
