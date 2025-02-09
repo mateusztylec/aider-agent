@@ -80,11 +80,12 @@ def conversation(instruction: str):
     ]
     client = OpenAI(api_key=os.getenv("GROQ_API_KEY"), base_url="https://api.groq.com/openai/v1")
 
-    for i in range(3):
+    for i in range(5):
         print(f"Iteration {i}")
         response = client.chat.completions.create(
             model="deepseek-r1-distill-llama-70b",
             messages=messages,
+            name="aider-agent",
         )
         response_content = response.choices[0].message.content
         messages.append({"role": "assistant", "content": response_content})
@@ -100,7 +101,7 @@ def conversation(instruction: str):
                 return
             else:
                 # Import here to avoid circular imports
-                from aider.api import chat_with_aider_api
+                from aider.api_aider import chat_with_aider_api
                 aider_response = chat_with_aider_api(Message(content=response_json["content"]))
                 messages.append({"role": "user", "content": json.dumps(aider_response)})
         elif response_json["type"] == "perplexity":

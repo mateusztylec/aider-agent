@@ -1,5 +1,5 @@
 import uvicorn
-from aider.api import set_aider_args
+from aider.api_aider import set_aider_args
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -10,7 +10,7 @@ def main():
     aider_args = sys.argv[1:]
     set_aider_args(aider_args)
     
-    uvicorn.run("aider.api:app", host="0.0.0.0", port=8000)
+    uvicorn.run("aider.api_aider:app", host="0.0.0.0", port=8000)
 
 if __name__ == "__main__":
     main()
