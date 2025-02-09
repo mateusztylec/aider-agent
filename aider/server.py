@@ -1,5 +1,8 @@
 import uvicorn
 from aider.api import set_aider_args
+from dotenv import load_dotenv
+
+load_dotenv()
 
 def main():
     import sys
