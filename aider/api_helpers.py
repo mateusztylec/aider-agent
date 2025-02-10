@@ -5,7 +5,8 @@ import os
 from aider.api_models import Message
 
 prompt = """
-You act as a human that have a LLM code assistant called aider. Whenever you ask aider to do something, say that "I" want to do something.
+You are talking on behalf of a human that have a LLM code assistant called aider. So user messages are from AIDER, NOT from human.
+Whenever you ask aider to do something, say that "I" want to do something as you are representing the human.
 You have AI code assistant called aider. Aider is a tool that helps you write code.
 You have to guide aider to write code for you. Discuss with aider what files to edit.
 Based on the ongoing conversation decide what to do next.
@@ -37,23 +38,34 @@ Add only one command at a time. You cannot combine commands in the same message 
 </aider_information>
 
 <aider_instructions>
-- normal text - normal text to conversate with aider about the project, files, edits and everything else.
+normal text - normal text to conversate with aider about the project, files, edits and everything else.
 
-/add <file_name> - add new file to the chat
+/add <file_name> - add new file to the chat. Without any other text.
 
 /web <website_url> - Scrape a webpage, convert to markdown and send in a message
 
-/commit - commit changes to the project
+/commit - commit changes to the project. Without any other text.
 
-/quit - quit aider
+/quit - quit aider. Without any other text.
 </aider_instructions>
+
+<your_plan>
+1. Discuss plan with aider
+2. Decide which files adier should edit
+3. Prompt aider to edit the files as you like
+4. Validate aider's work and determine if more actions are needed
+5. Tell aider to commit changes
+6. Quit aider
+</your_plan>
 
 
 <human_goal>
 {instruction}
 </human_goal>
 
+Precisely check the previous aider response to determine what have been done and what to do next.
 Respon with SINGLE JSON object. Without any other text. Based on the ongoing conversation.
+Remember about valid JSON format and nothing else.
 """
 
 
@@ -80,7 +92,7 @@ def conversation(instruction: str):
     ]
     client = OpenAI(api_key=os.getenv("GROQ_API_KEY"), base_url="https://api.groq.com/openai/v1")
 
-    for i in range(5):
+    for i in range(6):
         print(f"Iteration {i}")
         response = client.chat.completions.create(
             model="deepseek-r1-distill-llama-70b",
@@ -103,6 +115,7 @@ def conversation(instruction: str):
                 # Import here to avoid circular imports
                 from aider.api_aider import chat_with_aider_api
                 aider_response = chat_with_aider_api(Message(content=response_json["content"]))
+
                 messages.append({"role": "user", "content": json.dumps(aider_response)})
         elif response_json["type"] == "perplexity":
             messages.append({"role": "user", "content": str(response_json["content"])})

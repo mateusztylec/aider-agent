@@ -152,6 +152,10 @@ class APIInputOutput(InputOutput):
         super().append_chat_history(message, linebreak=True)
 
     def confirm_ask(self, question, default="y", subject=None, explicit_yes_required=False, group=None, allow_never=False):
+
+        if "Run shell commands?" in question:
+            return False
+        
         self.current_response.append({
             "type": "confirm",
             "question": question,
@@ -183,17 +187,37 @@ def set_aider_args(args):
     """Set the aider arguments before starting the server"""
     global AIDER_ARGS
     if os.getenv("NODE_ENV") == "development":
-        AIDER_ARGS = args + ["--no-stream", "--config", "./docker/.aider.conf.yml"]
+        AIDER_ARGS = args + ["--no-stream", "--config", "../docker/.aider.conf.yml"]
     else:
         AIDER_ARGS = args + ["--no-stream", "--config", "/home/appuser/.aider.conf.yml"]
 
 
 def initialize_aider_api(request: InitRequest):
     from aider.main import main
+    import os
+    import tempfile
+    from pathlib import Path
 
     app.io = APIInputOutput(pretty=request.pretty)
-    app.io.coder = main(AIDER_ARGS, input=None, output=None, return_coder=True, io=app.io)
-    return {"status": "initialized", "message": "Aider initialized successfully"}
+
+    if os.getenv("NODE_ENV") == "development":
+        # Create temp directory if it doesn't exist
+        temp_dir = Path("./temp")
+        temp_dir.mkdir(exist_ok=True)
+
+        # Change to temp directory
+        original_cwd = os.getcwd()
+        os.chdir(temp_dir)
+
+        try:
+            app.io.coder = main(AIDER_ARGS, input=None, output=None, return_coder=True, io=app.io)
+            return {"status": "initialized", "message": "Aider initialized successfully in temp directory"}
+        finally:
+            # Change back to original directory
+            os.chdir(original_cwd)
+    else:
+        app.io.coder = main(AIDER_ARGS, input=None, output=None, return_coder=True, io=app.io)
+        return {"status": "initialized", "message": "Aider initialized successfully"}
 
 
 def chat_with_aider_api(message):
@@ -206,11 +230,13 @@ def chat_with_aider_api(message):
     try:
         app.io.coder.run(with_message=message.content)
         return {
+            "type": "aider",
             "status": "success",
             "responses": app.io.current_response
         }
     except Exception as e:
         return {
+            "type": "aider",
             "status": "error",
             "error": str(e),
             "responses": app.io.current_response

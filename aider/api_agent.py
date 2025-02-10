@@ -182,7 +182,8 @@ def create_github_pull_request(
 
 
 @agent_router.post("/instruction")
-async def agent_instruction(instruction: str):
+async def agent_instruction(request: InstructionRequest):
+    instruction = request.instruction
     if not os.getenv("REPO_URL"):
         raise HTTPException(
             status_code=400,
@@ -202,6 +203,13 @@ async def agent_instruction(instruction: str):
 
         # Setup repository and create branch
         repo = setup_repository(app_dir, full_repo_url, branch)
+
+        # Initialize aider and start conversation
+        from aider.api_aider import initialize_aider_api, InitRequest
+        initialize_aider_api(InitRequest(pretty=False))
+        conversation(instruction)
+
+        repo.git.push('--set-upstream', 'origin', branch)
 
         # Create pull request if token is provided and it's a GitHub repository
         if token and "github.com" in repo_url:
@@ -242,11 +250,9 @@ async def agent_instruction_test(request: InstructionRequest):
         from aider.api_aider import initialize_aider_api, InitRequest
         initialize_aider_api(InitRequest(pretty=False))
         conversation(request.instruction)
-        
+
         current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-        repo.index.add('.')
-        repo.index.commit(f"Test commit: Update files at {current_time}")
         repo.git.push('--set-upstream', 'origin', branch)
         logger.debug("Test commit pushed successfully")
 
