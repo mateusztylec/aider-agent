@@ -259,3 +259,4 @@ pip==25.0
 
 fastapi
 uvicorn
+langfuse
